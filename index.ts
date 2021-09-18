@@ -82,13 +82,6 @@ const init = () => {
 
     const bot = new TelegramBot(token, { polling: true });
 
-    bot.onText(/\/start/, (msg) => {
-        // listens for "/start" and responds with the greeting below.
-        bot.sendMessage(
-            msg.chat.id,
-            "What does this bot? - This bot broadcast orders to all subscribed channels. \nSet me in the channel(s) as administrator and then send me a channel or channels name(s) please"
-        );
-    });
 
     bot.on("callback_query", (query) => {
         if (query?.message?.text && query.data === "add") {
@@ -120,6 +113,14 @@ const init = () => {
     });
 
     bot.on("message", async (msg: TelegramBot.Message) => {
+        if (msg.text === '/start') {
+            bot.sendMessage(
+                msg.chat.id,
+                "What does this bot? - This bot broadcast orders to all subscribed channels. \nSet me in the channel(s) as administrator and then send me a channel or channels name(s) please"
+            );
+            return
+        }
+
         if (msg.text && msg.text.includes('showcart')) {
             const cart = msg.from && custumersStore.getUserCart(msg.from.id);
             
